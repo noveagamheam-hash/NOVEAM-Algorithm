@@ -2,6 +2,10 @@
 from fastapi import FastAPI
 from noveam_web3.routes import router as web3_router
 
+# NOVEAM AI Ranking Algorithm
+from ndi.models import RankRequest, RankResponse
+from ndi.ranking import rank
+
 app = FastAPI(
     title="NOVEAM Decentralized AI & Web3 API",
     description=(
@@ -11,7 +15,7 @@ app = FastAPI(
     version="0.1.0"
 )
 
-# Register Web3 API routes
+# Register existing Web3 API routes
 app.include_router(web3_router)
 
 
@@ -30,3 +34,13 @@ def health():
         "status": "ok",
         "service": "NOVEAM Algorithm"
     }
+
+
+# NOVEAM NDI-A01 AI Recommendation Endpoint
+@app.post(
+    "/api/ai/rank",
+    response_model=RankResponse,
+    tags=["NOVEAM AI"]
+)
+def rank_feed(request: RankRequest):
+    return rank(request)
